@@ -1,6 +1,7 @@
 package com.aninfo;
 
 import com.aninfo.model.Account;
+import com.aninfo.model.Transaction;
 import com.aninfo.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -22,7 +23,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @RestController
 @SpringBootApplication
 @EnableSwagger2
-public class Memo1BankApp {
+public class Memo1BankApp { //controlador
 
 	@Autowired
 	private AccountService accountService;
@@ -30,7 +31,11 @@ public class Memo1BankApp {
 	public static void main(String[] args) {
 		SpringApplication.run(Memo1BankApp.class, args);
 	}
-
+	@GetMapping("/accounts/{cbu}/transactions/") //this get transactions from an account, create a Transaction (as a linkedinlist)
+	public ResponseEntity<Collection<Transaction>> getTransactions(@PathVariable Long cbu) {
+		Optional<Account> accountOptional = accountService.findById(cbu);
+		return ResponseEntity.ok(accountService.getTransactions(cbu));
+	}
 	@PostMapping("/accounts")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Account createAccount(@RequestBody Account account) {
@@ -48,6 +53,12 @@ public class Memo1BankApp {
 		return ResponseEntity.of(accountOptional);
 	}
 
+	@GetMapping("/transactions/{id}")
+	public ResponseEntity<Transaction> getTransaction(@PathVariable long id)
+	{
+		Optional<Transaction> transactionOptional = accountService.getTransaction(id);
+				return ResponseEntity.of(transactionOptional);
+	}
 	@PutMapping("/accounts/{cbu}")
 	public ResponseEntity<Account> updateAccount(@RequestBody Account account, @PathVariable Long cbu) {
 		Optional<Account> accountOptional = accountService.findById(cbu);
@@ -74,6 +85,7 @@ public class Memo1BankApp {
 	public Account deposit(@PathVariable Long cbu, @RequestParam Double sum) {
 		return accountService.deposit(cbu, sum);
 	}
+
 
 	@Bean
 	public Docket apiDocket() {
