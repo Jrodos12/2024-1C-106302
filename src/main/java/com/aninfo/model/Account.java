@@ -1,6 +1,7 @@
 package com.aninfo.model;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 public class Account {

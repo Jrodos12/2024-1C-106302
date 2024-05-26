@@ -76,6 +76,12 @@ public class Memo1BankApp { //controlador
 		accountService.deleteById(cbu);
 	}
 
+
+	@DeleteMapping("/transactions/{id}")
+	public void deleteTransaction(@PathVariable Long id) {
+		accountService.deleteTransaction(id);
+	}
+
 	@PutMapping("/accounts/{cbu}/withdraw")
 	public Account withdraw(@PathVariable Long cbu, @RequestParam Double sum) {
 		return accountService.withdraw(cbu, sum);
